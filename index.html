@@ -130,15 +130,15 @@
       vec2 p = uv;
       float f, dx, dz, w = 0.5;
         f = dx = dz = 0.0;
-        for(int i = 0; i < 8; ++i){
+        for(int i = 0; i < 4; ++i){
             vec3 n = dnoise2f(uv);
             dx += n.y;
             dz += n.z;
             f += w * n.x / (1.0 + dx*dx + dz*dz);
             w *= 0.96;
-            uv *= vec2(1.16);
-            uv *= rot2d(1.25*noise(vec3(p*0.1, 0.12*time))+
-                        0.75*noise(vec3(p*0.1, 0.20*time)));
+            uv *= rot2d(sin(time));
+            // uv *= rot2d(1.25*noise(vec3(p*0.1, 0.12*time))+
+            //             0.75*noise(vec3(p*0.1, 0.20*time)));
         }
         return f;
     }
@@ -159,7 +159,7 @@
 
     void main(void){
         vec2 p = gl_FragCoord.xy / vec2(max(WIDTH, HEIGHT), max(WIDTH, HEIGHT));
-        vec2 uv = p - vec2(0.5, 1.0 - HEIGHT/WIDTH);
+        vec2 uv = p - vec2(0.5, 1.0);
 
         vec4 tex1 = texture2D(tex, vec2(fbm(uv)+p.x-mouseX*0.0015 ,fbm(uv)+p.y+mouseY*0.0015));
         gl_FragColor = tex1*.9;
