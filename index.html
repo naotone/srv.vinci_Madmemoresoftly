@@ -2,7 +2,10 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
+    <title>Srv.vinci / Mad me more softly</title>
     <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript">stLight.options({publisher: "1c87a708-607f-4abc-acd1-2f9526cae449", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
   </head>
   <body>
     <div id="wrapper">
@@ -10,7 +13,10 @@
       <h1><img src="images/logo.png" alt="Srv.vinci / Mad me more softly" /></h1>
     </header>
       <section id="youtube">
-        <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe src='https://www.youtube.com/embed/fqDXQAxcbzY' frameborder='0' allowfullscreen></iframe></div>
+        <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+        <div class='embed-container'>
+          <iframe frameborder="0" allowfullscreen="1" id="youtube_player" src="https://www.youtube.com/embed/fqDXQAxcbzY?autoplay=0&amp;controls=1&amp;showinfo=0&amp;wmode=opaque&amp;enablejsapi=1"></iframe>
+        </div>
       </section>
 
     <section id="desc">
@@ -42,6 +48,7 @@
    </section>
 
    <footer>
+     <div class="addthis_native_toolbox"></div>
      <p>&copy; 2015 Srv.vinci</p>
    </footer>
 
@@ -54,8 +61,8 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
     <script type="text/javascript" src="scripts/libs/stats.js"></script>
-    <script type="text/javascript" src="scripts/libs/dat.gui.js"></script>
-    <script type="text/javascript" src="scripts/libs/OrbitControls.js"></script>
+    <!-- <script type="text/javascript" src="scripts/libs/dat.gui.js"></script> -->
+    <!-- <script type="text/javascript" src="scripts/libs/OrbitControls.js"></script> -->
     <script type="text/javascript" src="scripts/libs/postprocessing/ShaderPass.js"></script>
     <script type="text/javascript" src="scripts/libs/shaders/CopyShader.js"></script>
 
@@ -123,12 +130,12 @@
       vec2 p = uv;
       float f, dx, dz, w = 0.5;
         f = dx = dz = 0.0;
-        for(int i = 0; i < 20; ++i){
+        for(int i = 0; i < 8; ++i){
             vec3 n = dnoise2f(uv);
             dx += n.y;
             dz += n.z;
             f += w * n.x / (1.0 + dx*dx + dz*dz);
-            w *= 0.86;
+            w *= 0.96;
             uv *= vec2(1.16);
             uv *= rot2d(1.25*noise(vec3(p*0.1, 0.12*time))+
                         0.75*noise(vec3(p*0.1, 0.20*time)));
@@ -136,29 +143,30 @@
         return f;
     }
 
-    float fbmLow(vec2 uv){
-        float f, dx, dz, w = 0.5;
-        f = dx = dz = 0.0;
-        for(int i = 0; i < 1; ++i){
-            vec3 n = dnoise2f(uv);
-            dx += n.y;
-            dz += n.z;
-            f += w * n.x / (1.0 + dx*dx + dz*dz);
-            w *= 0.75;
-            uv *= vec2(1.5, 1.5);
-        }
-        return f;
-    }
+    // float fbmLow(vec2 uv){
+    //     float f, dx, dz, w = 0.5;
+    //     f = dx = dz = 0.0;
+    //     for(int i = 0; i < 3; ++i){
+    //         vec3 n = dnoise2f(uv);
+    //         dx += n.y;
+    //         dz += n.z;
+    //         f += w * n.x / (1.0 + dx*dx + dz*dz);
+    //         w *= 1.85;
+    //         uv *= vec2(1.5, 1.5);
+    //     }
+    //     return f;
+    // }
 
     void main(void){
         vec2 p = gl_FragCoord.xy / vec2(max(WIDTH, HEIGHT), max(WIDTH, HEIGHT));
         vec2 uv = p - vec2(0.5, 1.0 - HEIGHT/WIDTH);
 
         vec4 tex1 = texture2D(tex, vec2(fbm(uv)+p.x-mouseX*0.0015 ,fbm(uv)+p.y+mouseY*0.0015));
-        gl_FragColor = tex1*1.0;
+        gl_FragColor = tex1*.9;
     }
-
     </script>
     <script type=text/javascript src="scripts/app.min.js"></script>
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-54e0ce3d032b2a38" async="async"></script>
+
   </body>
 </html>

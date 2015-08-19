@@ -18,9 +18,50 @@ var baseTime = +new Date;
 var clock = new THREE.Clock();
 
 window.addEventListener('resize', onWindowResize, false);
-window.addEventListener( 'mousemove', onDocumentMouseMove, false );
+// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 init();
+
+var tag = document.createElement('script');
+tag.src = 'http://www.youtube.com/player_api';
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var yt_player;
+function onYouTubePlayerAPIReady() {
+  yt_player = new YT.Player('youtube_player', {
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+
+    }
+  });
+}
+
+function onPlayerReady() {
+  // var timer = setInterval(onPlayerStateChange, 10000)
+  document.getElementById('desc').onclick = function() {
+      yt_player.playVideo();
+  };
+  document.getElementById('pause').onclick = function() {
+      yt_player.pauseVideo();
+  };
+
+}
+
+var myPlayerState;
+var playing = false;
+function onPlayerStateChange(event) {
+  if (event.data == 1) {
+  }else{
+    requestID = requestAnimationFrame(animate);
+    console.log(myPlayerState);
+  }
+  myPlayerState = event.data;
+}
+
+
+
 
 function init(){
   HEIGHT = window.innerHeight;
@@ -29,9 +70,12 @@ function init(){
   windowHalfY = HEIGHT / 2;
 
   renderer = new THREE.WebGLRenderer({ antialias:true });
-  renderer.setSize(WIDTH, HEIGHT);
+  renderer.setSize(Math.min(WIDTH, 650), window.innerHeight);
+  $('world').style.left = (WIDTH - Math.min(WIDTH, 650)) * 0.5 +'px';
+  $('world').style.width = Math.min(WIDTH, 650) + 'px';
+
   renderer.setClearColor(0x000000, 1);
-  document.getElementById('world').appendChild(renderer.domElement);
+  $('world').appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
 
@@ -43,11 +87,13 @@ function init(){
     mouseX: {type: 'f', value: mouseX},
     mouseY: {type: 'f', value: mouseY}
   };
+  createStats();
 
   createCamera();
   createJacket();
   createGlitch();
   animate();
+
 }
 
 function createCamera(){
@@ -55,7 +101,6 @@ function createCamera(){
   camera.position.z = 1000;
   scene.add(camera);
 }
-
 
 
 function createJacket(){
@@ -72,7 +117,7 @@ function createJacket(){
 
 function createGlitch(){
   var renderPass = new THREE.RenderPass(scene, camera);
-  var effectGlitch = new THREE.GlitchPass(1200);
+  var effectGlitch = new THREE.GlitchPass(8);
   effectGlitch.renderToScreen = true;
 
   composer = new THREE.EffectComposer(renderer);
@@ -81,22 +126,38 @@ function createGlitch(){
   composer.addPass(effectGlitch);
 }
 
+function createStats(){
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.top = '0';
+  stats.domElement.style.right = '0';
+  $('world').appendChild(stats.domElement);
+}
+
 function animate(){
-  requestAnimationFrame(animate);
-  material.uniforms.time.value = (+new Date - baseTime) / 1000;
+
+  requestID = requestAnimationFrame(animate);
+  if(myPlayerState == 1 || myPlayerState == 3){
+    console.log('pauseeee');
+    cancelAnimationFrame(requestID);
+    playing = true;
+  }
+
+  material.uniforms.time.value = clock.elapsedTime;
   delta = clock.getDelta();
   render();
+  stats.update();
 }
 
 function render(){
   // renderer.render(scene, camera);
-  composer.render(delta);
+  composer.render(clock.elapsedTime);
 }
 
 function onDocumentMouseMove(event) {
   material.uniforms.mouseX.value = ( event.clientX - windowHalfX ) * 0.15;
   material.uniforms.mouseY.value = ( event.clientY - windowHalfY ) * 0.15;
-  console.log('x:'+material.uniforms.mouseX.value + 'y:'+ material.uniforms.mouseY.value);
+  // console.log('x:'+material.uniforms.mouseX.value + 'y:'+ material.uniforms.mouseY.value);
 }
 
 function onWindowResize(){
@@ -106,12 +167,14 @@ function onWindowResize(){
   windowHalfY = window.innerHeight / 2;
   // camera.aspect = window.innerWidth / window.innerHeight;
   // camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  composer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(Math.min(WIDTH, 650), window.innerHeight);
+  // composer.setSize(window.innerWidth, window.innerHeight);
   material.uniforms.WIDTH.value = WIDTH;
   material.uniforms.HEIGHT.value = HEIGHT;
   scene.remove(tobject);
   createJacket();
+  $('world').style.left = (WIDTH - Math.min(WIDTH, 650)) * 0.5 +'px';
+  $('world').style.width = Math.min(WIDTH, 650) + 'px';
 }
 
 
@@ -121,51 +184,4 @@ function $( id ) {
 
 function map_range(value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
-}
-
-function createLoadScene() {
-  var result = {
-
-    scene:  new THREE.Scene(),
-    camera: new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 1, 1000 )
-
-  };
-
-  result.camera.position.z = 100;
-  result.scene.add( result.camera );
-
-  var object, geometry, material, light, count = 500, range = 200;
-
-  material = new THREE.MeshLambertMaterial( { color:0xffffff } );
-  geometry = new THREE.BoxGeometry( 5, 5, 5 );
-
-  for( var i = 0; i < count; i++ ) {
-
-    object = new THREE.Mesh( geometry, material );
-
-    object.position.x = ( Math.random() - 0.5 ) * range;
-    object.position.y = ( Math.random() - 0.5 ) * range;
-    object.position.z = ( Math.random() - 0.5 ) * range;
-
-    object.rotation.x = Math.random() * 6;
-    object.rotation.y = Math.random() * 6;
-    object.rotation.z = Math.random() * 6;
-
-    object.matrixAutoUpdate = false;
-    object.updateMatrix();
-
-    result.scene.add( object );
-
-  }
-
-  result.scene.matrixAutoUpdate = false;
-
-  light = new THREE.PointLight( 0xffffff );
-  result.scene.add( light );
-
-  light = new THREE.DirectionalLight( 0x111111 );
-  light.position.x = 1;
-  result.scene.add( light );
-
-  return result;
 }
