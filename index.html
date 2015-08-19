@@ -44,7 +44,9 @@
 
    <section id="links">
      <h2><span class="bg">Srv.vinci Official Website</span></h2>
-       <a href="http://srv-vinci.jp/"><span class="bg">http://srv-vinci.jp/</span></a>
+     <a href="http://srv-vinci.jp/"><span class="bg">http://srv-vinci.jp/</span></a>
+     <a href="https://www.facebook.com/srv.vinci"><span class="bg">Facebook</span></a>
+     <a href="https://twitter.com/srv_vinci"><span class="bg">Twitter</span></a>
    </section>
 
    <footer>
@@ -137,25 +139,9 @@
             f += w * n.x / (1.0 + dx*dx + dz*dz);
             w *= 0.96;
             uv *= rot2d(sin(time));
-            // uv *= rot2d(1.25*noise(vec3(p*0.1, 0.12*time))+
-            //             0.75*noise(vec3(p*0.1, 0.20*time)));
         }
         return f;
     }
-
-    // float fbmLow(vec2 uv){
-    //     float f, dx, dz, w = 0.5;
-    //     f = dx = dz = 0.0;
-    //     for(int i = 0; i < 3; ++i){
-    //         vec3 n = dnoise2f(uv);
-    //         dx += n.y;
-    //         dz += n.z;
-    //         f += w * n.x / (1.0 + dx*dx + dz*dz);
-    //         w *= 1.85;
-    //         uv *= vec2(1.5, 1.5);
-    //     }
-    //     return f;
-    // }
 
     void main(void){
         vec2 p = gl_FragCoord.xy / vec2(max(WIDTH, HEIGHT), max(WIDTH, HEIGHT));
