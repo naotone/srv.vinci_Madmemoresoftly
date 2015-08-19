@@ -19,6 +19,7 @@ var clock = new THREE.Clock();
 
 window.addEventListener('resize', onWindowResize, false);
 // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+// window.addEventListener('keyup', onKeyUp, false );
 
 init();
 
@@ -55,8 +56,6 @@ function onPlayerStateChange(event) {
   }
   myPlayerState = event.data;
 }
-
-
 
 
 function init(){
@@ -172,6 +171,15 @@ function onWindowResize(){
   // $('world').style.width = Math.min(WIDTH, 650) + 'px';
 }
 
+function onKeyUp(e){
+  e.preventDefault();
+  console.log(11);
+ if (e.keyCode == 27 ) {
+   console.log('123');
+   removeClass($('youtubeBg'), 'on');
+   addClass($('youtubeBg'), 'off');
+ }
+}
 
 function addClass(el, className){
   if (el.classList)
