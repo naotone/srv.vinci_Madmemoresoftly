@@ -37,7 +37,7 @@ replaceImageNotRetina(image_name, extention=png)
 
 @import 'ColorAndType.styl'
 span.bg
-  background rgba(blackDark, 1)
+  background rgba(blackDark, 0.7)
 
 
 html
@@ -67,7 +67,7 @@ body
 header
   height 100%
   position relative
-  z-index 100
+  z-index 10
   margin 5% 0
   h1
     width 100%
@@ -83,27 +83,62 @@ section
   margin 0 0 5% 0
 
 section#youtube
+  z-index 101
+  position relative
+  .embed-container
+    position relative
+    padding-bottom 56.25%
+    height 0
+    overflow hidden
+    max-width 100%
+    iframe,
+    object,
+    embed
+      position absolute
+      top 0
+      left 0
+      width 100%
+      height 100%
+
   iframe
     cursor pointer !important
-  // z-index -10000 !important
-  // position realtive
 
+#youtubeBg
+  position fixed
+  width 100%
+  height 100%
+  top 0
+  left 0
+  display block
+  background-color rgba(blackDark, 0.9)
+  z-index -100
+  visibility visible
+  opacity 0
+  transition all 0.3s cubic-bezier(.06,.33,0,1.07)
+  &.on
+    z-index 100
+    opacity 1
+  &.off
+    z-index -100
+    opacity 0
 
 section#desc
   h2
+    line-height 2.8rem
     font-size 2rem
     margin 0 0 1rem 0
   h3
-    margin 0 0 0.5rem 0
+    margin 0 0 0.7rem 0
     font-size 1.5rem
+    line-height 2.0rem
     span.small
-      padding 0 0 0 1rem
+      // padding 0 0 0 1rem
       font-size 0.7rem
 
   ul
     font-size 1rem
     li
-      line-height 1.5rem
+      margin 0 0 0.7rem 0
 
 section#soundCloud
   h2
@@ -116,13 +151,36 @@ section#links
     font-size 1.5rem
     display block
     margin 0 0 1rem 0
+  li
+    margin 0 0 0.7rem 0
   a
     font-size 1rem
 
 footer
   margin 0 0 2% 0
   p
-
     text-align center
     font-size 0.8rem
-    font-family HelveticaNeue, Helvetica
+    font-family HelveticaNeue, Helvetica, sans-serif
+  #shareButtons
+    text-align center
+    margin 0 0 2% 0
+    ul.share-buttons
+      list-style: none
+      padding: 0
+
+  ul.share-buttons li
+    display: inline
+    margin 0 2%
+
+@media only screen and (max-width:480px)
+  #wrapper
+    width: 90%
+  section
+    margin 0 0 30% 0
+  section#desc
+    h3
+      font-size 1.2rem
+      line-height 1.7rem
+      span.small
+        padding 0

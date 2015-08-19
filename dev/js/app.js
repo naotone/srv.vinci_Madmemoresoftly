@@ -39,23 +39,19 @@ function onYouTubePlayerAPIReady() {
 }
 
 function onPlayerReady() {
-  // var timer = setInterval(onPlayerStateChange, 10000)
-  document.getElementById('desc').onclick = function() {
-      yt_player.playVideo();
-  };
-  document.getElementById('pause').onclick = function() {
-      yt_player.pauseVideo();
-  };
-
+  $('youtubeBg').onclick = function(){
+    yt_player.pauseVideo();
+    removeClass($('youtubeBg'), 'on');
+  }
 }
 
 var myPlayerState;
-var playing = false;
 function onPlayerStateChange(event) {
   if (event.data == 1) {
   }else{
     requestID = requestAnimationFrame(animate);
-    console.log(myPlayerState);
+    removeClass($('youtubeBg'), 'on');
+    addClass($('youtubeBg'), 'off');
   }
   myPlayerState = event.data;
 }
@@ -70,9 +66,9 @@ function init(){
   windowHalfY = HEIGHT / 2;
 
   renderer = new THREE.WebGLRenderer({ antialias:true });
-  renderer.setSize(Math.min(WIDTH, 650), window.innerHeight);
-  $('world').style.left = (WIDTH - Math.min(WIDTH, 650)) * 0.5 +'px';
-  $('world').style.width = Math.min(WIDTH, 650) + 'px';
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  // $('world').style.left = (WIDTH - Math.min(WIDTH, 650)) * 0.5 +'px';
+  // $('world').style.width = Math.min(WIDTH, 650) + 'px';
 
   renderer.setClearColor(0x000000, 1);
   $('world').appendChild(renderer.domElement);
@@ -135,12 +131,11 @@ function createStats(){
 }
 
 function animate(){
-
   requestID = requestAnimationFrame(animate);
   if(myPlayerState == 1 || myPlayerState == 3){
-    console.log('pauseeee');
     cancelAnimationFrame(requestID);
-    playing = true;
+    removeClass($('youtubeBg'), 'off');
+    addClass($('youtubeBg'), 'on');
   }
 
   material.uniforms.time.value = clock.elapsedTime;
@@ -167,16 +162,30 @@ function onWindowResize(){
   windowHalfY = window.innerHeight / 2;
   // camera.aspect = window.innerWidth / window.innerHeight;
   // camera.updateProjectionMatrix();
-  renderer.setSize(Math.min(WIDTH, 650), window.innerHeight);
-  // composer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
   material.uniforms.WIDTH.value = WIDTH;
   material.uniforms.HEIGHT.value = HEIGHT;
   scene.remove(tobject);
   createJacket();
-  $('world').style.left = (WIDTH - Math.min(WIDTH, 650)) * 0.5 +'px';
-  $('world').style.width = Math.min(WIDTH, 650) + 'px';
+  // $('world').style.left = (WIDTH - Math.min(WIDTH, 650)) * 0.5 +'px';
+  // $('world').style.width = Math.min(WIDTH, 650) + 'px';
 }
 
+
+function addClass(el, className){
+  if (el.classList)
+    el.classList.add(className);
+  else
+    el.className += ' ' + className;
+}
+
+function removeClass(el, className){
+  if (el.classList)
+    el.classList.remove(className);
+  else
+  el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+}
 
 function $( id ) {
   return document.getElementById( id );
