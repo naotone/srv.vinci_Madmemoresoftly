@@ -1,63 +1,58 @@
+imgPath = '../../images/'
 @import 'nib'
 // @import 'dev/css/fontello.css'
 
 global-reset()
 
-verticalalign()
+verticalAlign()
   position relative
   top 50%
   transform translateY(-50%)
 
+
 replaceImage(image_name, extention=png)
-  background: image_url(image_name'.'extention) no-repeat center center
-  background-size: image-width(image_name'.'extention) image-height(image_name'.'extention)
-  text-indent: 100%
-  white-space: nowrap
-  overflow: hidden
-  // display: block
-  width: image-width(image_name'.'extention)
-  height: image-height(image_name'.'extention)
-
-  // background-color: bg
-
-  x2img = image_name'@2x'.extention
+  image = imgPath + image_name + '.' + extention
+  image2x = imgPath + image_name + '@2x.' + extention
+  background: url(image) no-repeat center center
+  background-size: image-size(image)
+  width: image-size(image)[0]
+  height: image-size(image)[1]
+  hide-text()
   @media all and (-webkit-min-device-pixel-ratio : 1.5), all and (min-device-width: 768px) and (max-device-width: 1024px)
-    background: image_url(x2img) no-repeat center center
-    background-size: image-width(image_name'.'extention) image-height(image_name'.'extention)
-    text-indent: 100%
-    white-space: nowrap
-    overflow: hidden
-    // display: block
-    width: image-width(image_name'.' extention)
-    height: image-height(image_name'.'extention)
+    background url(image2x) no-repeat center center
+    background-size image-size(image)
+    width image-size(image)[0]
+    height image-size(image)[1]
+    hide-text()
+
+replaceImageNotRetina(image_name, extention=png)
+  image = imgPath + image_name + '.' + extention
+  image2x = imgPath + image_name + '@2x.' + extention
+  background: url(image) no-repeat center center
+  background-size: image-size(image)
+  width: image-size(image)[0]
+  height: image-size(image)[1]
+  hide-text()
 
 
 @import 'ColorAndType.styl'
+span.bg
+  background rgba(blackDark, 1)
 
 
 html
-  overflow hidden
   width auto
   height auto
 
 body
-  background gray
-  overflow hidden
+  background blue
   display block
 
-header
-  height 100%
-  position absolute
-  z-index 100
-  h1
-    font-weight bold
-    background white
-    display inline
-    border 2px solid black
-    text-align center
-    margin 0 auto
-
-
+#wrapper
+  width 80%
+  display block
+  // text-align center
+  margin 0 auto
 
 #world
   position fixed
@@ -67,40 +62,62 @@ header
   height 100%
   z-index -1
 
-#youtube
-  z-index 0
-  border 15px solid #000
-  width 90%
-  margin 5% auto
-
-
-
-#progress
-  color red
-  top 7em
-  width  100%
-  font-size 3em
-  font-variant small-caps
-  font-weight bold
-  position absolute
+header
+  height 100%
+  position relative
   z-index 100
-  text-align center
-  text-shadow #000 0px 0px 10px
-  display none
+  margin 5% 0
+  h1
+    width 100%
+    img
+      min-width 200px
+      display block
+      width 30%
+      height auto
+      margin 0 auto
+      text-align center
+
+section
+  margin 0 0 5% 0
+
+section#youtube
+  z-index 0
 
 
-.shadow
-  -moz-box-shadow 0px 0px 5px #000
-  -webkit-box-shadow 0px 0px 5px #000
-  box-shadow 0px 0px 5px #000
+section#desc
+  h2
+    font-size 2rem
+    margin 0 0 1rem 0
+  h3
+    margin 0 0 0.5rem 0
+    font-size 1.5rem
+    span.small
+      padding 0 0 0 1rem
+      font-size 0.7rem
 
-#progressbar
-  text-align center
-  background white
-  width 250px
-  height 10px
+  ul
+    font-size 1rem
+    li
+      line-height 1.5rem
 
-#bar
-  background #d00
-  width 50px
-  height 10px
+section#soundCloud
+  h2
+    font-size 1.5rem
+    display block
+    margin 0 0 1rem 0
+
+section#links
+  h2
+    font-size 1.5rem
+    display block
+    margin 0 0 1rem 0
+  a
+    font-size 1rem
+
+footer
+  margin 0 0 2% 0
+  p
+
+    text-align center
+    font-size 0.8rem
+    font-family HelveticaNeue, Helvetica
