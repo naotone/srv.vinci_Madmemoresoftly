@@ -173,9 +173,7 @@ function onWindowResize(){
 
 function onKeyUp(e){
   e.preventDefault();
-  console.log(11);
  if (e.keyCode == 27 ) {
-   console.log('123');
    removeClass($('youtubeBg'), 'on');
    addClass($('youtubeBg'), 'off');
  }
