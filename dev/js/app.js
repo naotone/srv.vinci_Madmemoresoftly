@@ -82,8 +82,8 @@ function init(){
     mouseX: {type: 'f', value: mouseX},
     mouseY: {type: 'f', value: mouseY}
   };
-  createStats();
 
+  // createStats();
   createCamera();
   createJacket();
   createGlitch();
@@ -140,7 +140,7 @@ function animate(){
   material.uniforms.time.value = clock.elapsedTime;
   delta = clock.getDelta();
   render();
-  stats.update();
+  // stats.update();
 }
 
 function render(){

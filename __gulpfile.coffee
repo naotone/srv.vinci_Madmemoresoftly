@@ -28,7 +28,6 @@ gulp.task 'reload',->
     .pipe $.livereload()
 
 gulp.task 'jade', ->
-  # jade = require 'gulp-jade'
   gulp.src 'dev/jade/script.coffee'
     .pipe $.plumber({
       errorHandler: notify.onError('<%= error.message %>')
@@ -37,12 +36,11 @@ gulp.task 'jade', ->
     .pipe $.notify("gulp: coffee finished.")
 
 gulp.task 'coffee',->
-  # coffee = require 'gulp-coffee'
   gulp.src 'dev/coffee/script.coffee'
     .pipe $.plumber({
       errorHandler: $.notify.onError('<%= error.message %>')
       })
-    .pipe $.sourcemaps.init()
+    .pipe( $.if( !(config.isRelease), $.sourcemaps.init({loadMaps: true})))
     .pipe $.coffee()
     # .pipe $.concat 'scripts/script.js'
     .pipe $.sourcemaps.write( '.' )
@@ -54,12 +52,11 @@ gulp.task 'javascript' ,->
     .pipe $.plumber({
       errorHandler: $.notify.onError('<%= error.message %>')
       })
-    # .pipe gulp.dest 'scripts'
-    .pipe $.sourcemaps.init()
-    .pipe $.uglify()
+    .pipe( $.if( !(config.isRelease), $.sourcemaps.init({loadMaps: true})))
+    .pipe( $.if( config.isRelease, $.uglify() ) )
     .pipe $.rename 'app.min.js'
-    .pipe $.sourcemaps.write( '.' )
-    .pipe gulp.dest 'scripts'
+    .pipe( $.if( !( config.isRelease ), $.sourcemaps.write( './' ) ) )
+    .pipe( $.if( config.isRelease, gulp.dest('./release/scripts'), gulp.dest('scripts')))
     .pipe $.notify 'gulp: js finished.'
 
 gulp.task 'stylus',->
@@ -67,7 +64,7 @@ gulp.task 'stylus',->
     .pipe $.plumber({
       errorHandler: $.notify.onError('<%= error.message %>')
       })
-    .pipe $.sourcemaps.init()
+    .pipe( $.if( !( config.isRelease ), $.sourcemaps.init() ) )
     .pipe $.stylus({
       use: nib()
       compress: true
@@ -79,9 +76,9 @@ gulp.task 'stylus',->
           ['last 2 version']
     }
     .pipe $.rename 'style.css'
-    .pipe $.minifyCss()
-    .pipe $.sourcemaps.write( '.' )
-    .pipe gulp.dest __dirname
+    .pipe( $.if( config.isRelease, $.minifyCss() ) )
+    .pipe( $.if( !( config.isRelease ), $.sourcemaps.write( '.' ) ) )
+    .pipe( $.if( config.isRelease, gulp.dest('./release'), gulp.dest('./')));
     .pipe $.notify("gulp: stylus finished.")
 
 # gulp.task 'sass',->
