@@ -107,6 +107,7 @@
     uniform sampler2D tex;
 
     mat2 rot2d(float angle){return mat2(cos(angle),-sin(angle),sin(angle),cos(angle));}
+    float r(float a, float b){return fract(sin(dot(vec2(a,b),vec2(12.9898,78.233)))*43758.5453);}
     float h(float a){return fract(sin(dot(a,dot(12.9898,78.233)))*43758.5453);}
 
     float noise(vec3 x){
