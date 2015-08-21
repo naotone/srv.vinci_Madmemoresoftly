@@ -29,7 +29,7 @@
       <p><span class="bg">Srv.Vinci 1st Full Album</span></p>
       <h2><span class="bg">Mad me more softly</span></h3>
 
-      <h3><span class="bg">2015.09.16 on Sale</span></h2>
+      <h3><span class="bg">2015.09.16(Wed) on Sale</span></h2>
 
       <p id="tracklist"><span class="bg">TRACKLIST</span></p>
       <ul>
@@ -107,7 +107,6 @@
     uniform sampler2D tex;
 
     mat2 rot2d(float angle){return mat2(cos(angle),-sin(angle),sin(angle),cos(angle));}
-    float r(float a, float b){return fract(sin(dot(vec2(a,b),vec2(12.9898,78.233)))*43758.5453);}
     float h(float a){return fract(sin(dot(a,dot(12.9898,78.233)))*43758.5453);}
 
     float noise(vec3 x){
