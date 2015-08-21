@@ -4,13 +4,24 @@ gulp = require 'gulp'
 $ = require('gulp-load-plugins')()
 nib = require 'nib'
 
+config = {
+  isWatchify: false,
+  isRelease: false
+}
+
 gulp.task 'watch',->
-  $.livereload.listen()
+  # $.livereload.listen()
   # gulp.watch 'dev/coffee/script.coffee',['coffee']
   gulp.watch 'dev/js/app.js',['javascript']
   gulp.watch 'dev/stylus/*.styl',['stylus']
   # gulp.watch 'gulpfile.coffee',['coffee','sass']
   gulp.watch files,['reload']
+
+gulp.task  'server', ->
+  browser = require( 'browser-sync' ).create()
+  browser.init
+    server:
+      baseDir: './'
 
 gulp.task 'reload',->
   gulp.src(files)
@@ -91,13 +102,7 @@ gulp.task 'stylus',->
 #     .pipe $.concat 'index.css'
 #     .pipe $.gulp.dest __dirname
 #
-localhost= require 'gulp-connect'
-gulp.task 'localhost',->
-  localhost.server {
-    root: __dirname
-    port: 9990
-    livereload: true
-  }
 
-gulp.task 'default',['localhost','watch']
+
+gulp.task 'default',['server','watch']
 # gulp.task 'default',['watch']
