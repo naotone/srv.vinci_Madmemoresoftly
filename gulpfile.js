@@ -1,10 +1,10 @@
-files = ['*.html', '*.php', 'scripts/app.min.js', 'style.css'];
+var files = ['*.html', '*.php', 'scripts/app.min.js', 'style.css'];
 
-gulp = require('gulp');
-$ = require('gulp-load-plugins')();
-nib = require('nib');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var browser = require( 'browser-sync' ).create();
 
-config = {
+var config = {
   isWatchify: false,
   isRelease: false
 }
@@ -17,7 +17,13 @@ gulp.task('javascript', function() {
   .pipe($.if(!config.isRelease, $.sourcemaps.init({
     loadMaps: true
   })))
-  .pipe($.if(config.isRelease, $.uglify()))
+  .pipe($.if(config.isRelease, $.uglify({
+    mangle: true,
+    compress: {
+      unsafe: true
+      // hoist_vars: true
+  }
+  })))
   .pipe($.rename('app.min.js'))
   .pipe($.if(!config.isRelease, $.sourcemaps.write('./')))
   .pipe($.if(config.isRelease, gulp.dest('./release/scripts'), gulp.dest('scripts')))
@@ -25,6 +31,7 @@ gulp.task('javascript', function() {
 });
 
 gulp.task('stylus', function() {
+  var nib = require('nib');
   return gulp.src('dev/stylus/app.styl').pipe($.plumber({
     errorHandler: $.notify.onError('<%= error.message %>')
   })).pipe($.if(!config.isRelease, $.sourcemaps.init()))
@@ -51,7 +58,6 @@ gulp.task('stylus', function() {
 // } );
 
 gulp.task( 'server', function() {
-  var browser = require( 'browser-sync' ).create();
   browser.init( {
     server: {
       baseDir: './'
@@ -60,8 +66,10 @@ gulp.task( 'server', function() {
 });
 // gulp.task( 'watch', [ 'watch:js', 'js', 'css', 'server' ], function () {
 gulp.task( 'watch', [ 'javascript', 'stylus', 'server' ], function () {
-  gulp.watch( ['dev/stylus/*.styl'], ['stylus']);
+  gulp.watch( ['dev/stylus/app.styl'], ['stylus']);
   gulp.watch( ['dev/js/app.js'] ,['javascript']);
+  gulp.watch(files).on('change', browser.reload);
+
 } );
 
 gulp.task( 'default', [ 'watch' ] );
